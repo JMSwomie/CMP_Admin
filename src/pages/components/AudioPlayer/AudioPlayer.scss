@@ -1,0 +1,9 @@
+@use '../../../styles/abstracts' as *;
+
+.audioPlayerContainer {
+   width: 42%;
+   height: auto;
+   padding: 12px 21px;
+   border: 1px solid $typography-primary;
+   border-radius: $borderRadius;
+}

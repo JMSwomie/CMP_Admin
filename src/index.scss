@@ -1,0 +1,45 @@
+@use './styles/abstracts' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scrollbar-width: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    appearance: textfield;
+  }
+}
+
+body {
+  font-family: $Nunito;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  -ms-overflow-style: none;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+.adminPanel {
+  &.dark {
+    background-color: $dark-primary;
+  }
+
+  &.light {
+    background-color: $primary;
+  }
+}

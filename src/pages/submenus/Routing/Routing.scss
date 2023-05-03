@@ -1,0 +1,333 @@
+@use '../../../styles/abstracts' as *;
+
+.routingContainer {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   padding: 12px 21px;
+   gap: 21px;
+   color: $typography-secondary;
+   overflow-y: scroll;
+
+   .headerRoutingContainer {
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 21px;
+      -webkit-box-shadow: $boxShadowDark;
+      box-shadow: $boxShadowClear;
+      border-radius: $borderRadius;
+
+      .titleRoutingWrapper {
+         width: 100%;
+         height: 100%;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         padding: 0 21px 12px;
+         flex-direction: row;
+         justify-content: space-between;
+         align-items: center;
+
+         h1 {
+            width: 100%;
+            height: 100%;
+            font-size: 30px;
+            font-weight: bold;
+         }
+
+         .titleRoutingButtons {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: right;
+
+            button {
+               width: 150px;
+               margin-left: 21px;
+            }
+         }
+      }
+
+      .routingSearchWrapper {
+         width: 100%;
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+         background-color: $navbar;
+         border-radius: $borderRadius;
+         padding: 21px;
+
+         .subTitle {
+            color: $white;
+            font-size: 21px;
+            margin: 0 6px;
+         }
+
+         .searchInputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            align-items: end;
+            column-gap: 21px;
+
+            .labelContainer {
+               flex: 1;
+               display: flex;
+               flex-direction: row;
+
+               label {
+                  width: 100%;
+                  height: 21px;
+                  margin-left: 9px;
+                  margin-bottom: 12px;
+                  font-size: 15px;
+                  color: white;
+               }
+            }
+
+            .selectContainer {
+               flex: 1;
+               display: flex;
+               flex-direction: row;
+               align-items: center;
+               text-align: center;
+
+               label {
+                  justify-content: center;
+                  align-items: center;
+                  margin-right: 6px;
+                  font-size: 15px;
+                  color: white;
+               }
+            }
+         }
+      }
+   }
+
+   .routingTableContainer {
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 21px;
+      -webkit-box-shadow: $boxShadowDark;
+      box-shadow: $boxShadowClear;
+      border-radius: $borderRadius;
+   }
+
+   .routingModal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba($primary, 0.81);
+      z-index: 2;
+
+      transition: $transitionsAll;
+
+      &.hide {
+         width: 0;
+         height: 0;
+         visibility: hidden;
+      }
+   }
+
+   // Media Query's
+
+   @include media('<LGtablet') {
+      padding: 12px;
+      .headerRoutingContainer {
+         padding: 12px;
+
+         .titleRoutingWrapper {
+            .listRoutingTitle {
+               font-size: 24px;
+               font-weight: bold;
+            }
+         }
+
+         .routingSearchWrapper {
+            .subTitle {
+               font-size: 18px;
+            }
+
+            .searchInputs {
+               .inputContainer {
+                  input {
+                     height: 27px;
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   @include media('<phone') {
+      .headerRoutingContainer {
+         .titleRoutingWrapper {
+            h1 {
+               font-size: 24px;
+            }
+
+            .titleRoutingButtons {
+               button {
+                  width: 120px;
+
+                  .buttonTitle {
+                     font-size: 15px;
+                  }
+               }
+            }
+         }
+
+         .routingSearchWrapper {
+            .searchInputs {
+               display: grid;
+               grid-template-columns: 1fr 1fr;
+               grid-template-rows: 1fr 1fr;
+               align-items: end;
+               column-gap: 21px;
+
+               .labelContainer {
+                  flex: 1;
+                  display: flex;
+                  flex-direction: row;
+
+                  label {
+                     width: 100%;
+                     height: 21px;
+                     margin-left: 9px;
+                     margin-bottom: 12px;
+                     font-size: 15px;
+                     color: white;
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   @include media('<fold') {
+      padding: 12px;
+      gap: 12px;
+
+      .headerRoutingContainer {
+         .titleRoutingWrapper {
+            width: 100%;
+            height: auto;
+            flex-direction: column;
+            margin: 0;
+
+            .listRoutingTitle {
+               width: 100%;
+               height: 100%;
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               font-size: 21px;
+               margin-bottom: 6px;
+            }
+
+            .titleRoutingButtons {
+               width: 100%;
+               height: auto;
+               display: flex;
+               justify-content: space-around;
+               align-items: center;
+
+               button {
+                  margin: 0;
+               }
+            }
+         }
+      }
+   }
+
+   @include media('<xsmall') {
+      .headerRoutingContainer {
+         .titleRoutingWrapper {
+            .titleRoutingButtons {
+               button {
+                  width: 42px;
+                  height: 42px;
+                  border-radius: 50%;
+
+                  .buttonTitle {
+                     display: none;
+                  }
+
+                  &.btnSubmit {
+                     &::before {
+                        font-weight: bold;
+                        font-size: 12px;
+                        content: 'Clear';
+                     }
+                  }
+
+                  &.btnActivated {
+                     &::before {
+                        font-weight: bold;
+                        font-size: 12px;
+                        content: 'On';
+                     }
+                  }
+
+                  &.btnInactivated {
+                     &::before {
+                        font-weight: bold;
+                        font-size: 12px;
+                        content: 'Off';
+                     }
+                  }
+               }
+            }
+         }
+
+         .routingSearchWrapper {
+            .searchInputs {
+               display: grid;
+               grid-template-columns: 1fr;
+               grid-template-rows: repeat(4, 1fr);
+               align-items: end;
+               row-gap: 3px;
+
+               .labelContainer {
+                  label {
+                     margin: 0 9px;
+                  }
+
+                  &.routingSearchLabel1 {
+                     grid-column: 1 / 2;
+                     grid-row: 1 / 2;
+                  }
+
+                  &.routingSearchLabel2 {
+                     grid-column: 1 / 2;
+                     grid-row: 3 / 4;
+                  }
+               }
+
+               .inputContainer {
+                  &.input1RoutingFormGroup {
+                     grid-column: 1 / 2;
+                     grid-row: 2 / 3;
+                  }
+
+                  &.input2RoutingFormGroup {
+                     grid-column: 1 / 2;
+                     grid-row: 4 / 5;
+                  }
+               }
+            }
+         }
+      }
+   }
+}

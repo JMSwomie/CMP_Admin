@@ -1,0 +1,119 @@
+@use '../../../../styles/abstracts' as *;
+
+.loginContainer {
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background: $backgroundLoginPage;
+
+   .row {
+      width: 420px;
+      height: 360px;
+      background-color: $white;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 21px;
+      -webkit-box-shadow: $boxShadowDark;
+      box-shadow: $boxShadowClear;
+      border-radius: $borderRadius;
+
+      .loginForm {
+         width: 420px;
+         height: 360px;
+         flex: 1;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+         margin: 12px;
+
+         h3 {
+            margin: 12px;
+            font-size: 30px;
+            font-weight: bold;
+         }
+
+         p {
+            width: 78%;
+            font-size: 12px;
+            margin-bottom: 12px;
+         }
+
+         .login {
+            width: 270px;
+            height: auto;
+            display: flex;
+            padding: 9px;
+            margin-top: 12px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: $indigo-600;
+            border-radius: $borderRadius;
+            cursor: pointer;
+
+            img {
+               width: 24px;
+               height: 100%;
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               margin-right: 9px;
+               filter: brightness(0) invert(1);
+            }
+
+            h4 {
+               color: $white;
+            }
+
+            &:active {
+               transform: scale(1.02);
+               transition: $transitionsAll;
+            }
+         }
+      }
+   }
+
+   @include media('<fold') {
+      .row {
+         width: 100%;
+         height: 100%;
+         padding: 12px;
+
+         .loginForm {
+            width: auto;
+            margin: 3px;
+
+            h3 {
+               margin: 6px;
+            }
+
+            form {
+               width: 87%;
+               margin-bottom: 15px;
+
+               a {
+                  margin: 9px;
+                  font-size: 9px;
+               }
+
+               input {
+                  padding: 6px;
+                  margin-bottom: 3px;
+                  border-radius: 6px;
+               }
+            }
+
+            p {
+               font-size: 9px;
+               margin-bottom: 9px;
+            }
+         }
+      }
+   }
+}

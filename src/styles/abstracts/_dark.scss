@@ -1,0 +1,23 @@
+@use './colors' as *;
+
+// Typography Colors
+
+$dark-typography-primary: $white;
+$dark-typography-secondary: $dark-100;
+$dark-typography-third: $dark-600;
+
+// Used Colors
+
+$dark-primary: $dark-600;
+$dark-secondary: $indigo-900;
+$dark-third: $indigo-300;
+$dark-fourth: $indigo-300;
+$dark-fifth: $indigo-300;
+
+
+// Special Colors
+
+$dark-leadsColor: $orange-900;
+$dark-ordersColor: $violet-300;
+$dark-salesColor: $red-900;
+$dark-usersColor: $cyan-500;

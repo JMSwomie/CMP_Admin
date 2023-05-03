@@ -1,0 +1,19 @@
+@use '../../../styles/abstracts' as *;
+
+.loadingSpinner {
+  width: 90px;
+  height: 90px;
+  border: 9px solid $dark-300;
+  border-top: 9px solid $third;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
