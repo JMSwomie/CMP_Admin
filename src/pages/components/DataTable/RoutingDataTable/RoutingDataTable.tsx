@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames';
 
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -16,21 +15,11 @@ type RoutingDataTableProps = {
 };
 
 export const RoutingDataTable = ({ rows, headers, totalRows, routingSelectedName }: RoutingDataTableProps) => {
-   const theme = useSelector((state: RootStateInterface) => state.theme.theme);
 
    const [currentPage, setCurrentPage] = useState(0);
    const [pageNumber, setPageNumber] = useState(1);
    const [totalPages, setTotalPages] = useState(0);
    const [key, setKey] = useState<string>();
-
-   // Use Memo & Custom Classes
-   const tableClasses = useMemo(
-      () =>
-         classNames('dataTable', {
-            dark: theme === 'dark',
-         }),
-      [theme]
-   );
 
    // Functions
    const handleEdit = (e: React.MouseEvent, Name: string) => {
@@ -102,7 +91,7 @@ export const RoutingDataTable = ({ rows, headers, totalRows, routingSelectedName
    }, [totalRows]);
 
    return (
-      <div className={tableClasses}>
+      <div className='dataTable'>
          <div className='tableContainer'>
             <div className='tableWrapper'>
                <table cellSpacing={3}>
