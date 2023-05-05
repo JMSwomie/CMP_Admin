@@ -1,52 +1,36 @@
-import { useAccount, useMsal } from '@azure/msal-react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Auth } from '@aws-amplify/auth';
+// import awsExports from '../../../../aws-exports';
 
 import './LoginPage.scss';
-import { useEffect } from 'react';
 
 export const LoginPage = () => {
    const navigate = useNavigate();
-   const { instance } = useMsal();
-
-   // Login Data
-   // const [errMsg, setErrMsg] = useState('');
-   // const [success, setSuccess] = useState(false);
-
-   const accounts = instance.getAllAccounts();
-   const account = useAccount(accounts[0] || {});
-
-   // Anonymous Functions
-   const handleSingIn = () => {
-      instance.loginRedirect({
-         scopes: ['user.read'],
-      });
-
-      // setSuccess(true);
-   };
 
    useEffect(() => {
-      if (account) {
-         localStorage.setItem('user', JSON.stringify(account));
-         navigate('/');
+      checkUser();
+   }, []);
+
+   const checkUser = async () => {
+      try {
+         const user = await Auth.currentAuthenticatedUser();
+         if (user) {
+            navigate('/');
+         }
+      } catch (error) {
+         console.log('User is not logged in');
       }
-   }, [account, navigate]);
-   
-   // useEffect(() => {
-   //    if (success) {
-   //       successAlert('Successful', 'Login in...');
-   //    }
+   };
 
-   //    setTimeout(() => {
-   //       navigate('/');
-   //    }, 100);
-   // }, [success]);
-
-   // useEffect(() => {
-   //    if (errMsg) {
-   //       errorAlert('Fail to Logging', errMsg);
-   //       setErrMsg('');
-   //    }
-   // }, [errMsg]);
+   const handleSignIn = async () => {
+      try {
+         const provider = 'Microsoft';
+         await Auth.federatedSignIn({ customProvider: provider });
+      } catch (error) {
+         console.error('Error signing in:', error);
+      }
+   };
 
    return (
       <section className='loginContainer'>
@@ -56,7 +40,7 @@ export const LoginPage = () => {
 
                <p>Please, proceed to login with your Business Microsoft credentials.</p>
 
-               <div className='login' onClick={handleSingIn}>
+               <div className='login' onClick={handleSignIn}>
                   <div className='windowsLogo'>
                      <img src={require('../../../../img/WindowsLogo.png')} alt='windows logo' />
                   </div>

@@ -1,0 +1,59 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-cmdadminpanel-dev-170130-authRole",
+      "UnauthRoleArn": "arn:aws:iam::797682405527:role/amplify-cmdadminpanel-dev-170130-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::797682405527:role/amplify-cmdadminpanel-dev-170130-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-cmdadminpanel-dev-170130-deployment",
+      "UnauthRoleName": "amplify-cmdadminpanel-dev-170130-unauthRole",
+      "StackName": "amplify-cmdadminpanel-dev-170130",
+      "StackId": "arn:aws:cloudformation:us-west-2:797682405527:stack/amplify-cmdadminpanel-dev-170130/7339bae0-ea06-11ed-a648-020a40bad4eb",
+      "AmplifyAppId": "d27o1eqtwmp9va"
+    }
+  },
+  "auth": {
+    "cmdadminpanelfc1d6520": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL",
+          "PHONE_NUMBER"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-cmdadminpanel-dev-170130-deployment/amplify-cfn-templates/auth/cmdadminpanelfc1d6520-cloudformation-template.json",
+        "logicalId": "authcmdadminpanelfc1d6520"
+      },
+      "lastPushTimeStamp": "2023-05-03T23:05:56.027Z",
+      "output": {
+        "UserPoolId": "us-west-2_IcO8XLoKn",
+        "AppClientIDWeb": "7454135d2for8o527g4te3fnb5",
+        "AppClientID": "5q2l8s3bq312k686e4gerues93",
+        "IdentityPoolId": "us-west-2:c81c9ebb-0de9-46b6-ad52-407db2170d95",
+        "UserPoolArn": "arn:aws:cognito-idp:us-west-2:797682405527:userpool/us-west-2_IcO8XLoKn",
+        "IdentityPoolName": "cmdadminpanelfc1d6520_identitypool_fc1d6520__dev",
+        "UserPoolName": "cmdadminpanelfc1d6520_userpool_fc1d6520"
+      },
+      "lastPushDirHash": "JRVDH8C+LfGleMw4e6AZNqDMWMI="
+    }
+  }
+}

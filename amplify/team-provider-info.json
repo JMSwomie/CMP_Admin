@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-cmdadminpanel-dev-170130-authRole",
+      "UnauthRoleArn": "arn:aws:iam::797682405527:role/amplify-cmdadminpanel-dev-170130-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::797682405527:role/amplify-cmdadminpanel-dev-170130-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-cmdadminpanel-dev-170130-deployment",
+      "UnauthRoleName": "amplify-cmdadminpanel-dev-170130-unauthRole",
+      "StackName": "amplify-cmdadminpanel-dev-170130",
+      "StackId": "arn:aws:cloudformation:us-west-2:797682405527:stack/amplify-cmdadminpanel-dev-170130/7339bae0-ea06-11ed-a648-020a40bad4eb",
+      "AmplifyAppId": "d27o1eqtwmp9va"
+    },
+    "categories": {
+      "auth": {
+        "cmdadminpanelfc1d6520": {}
+      }
+    }
+  }
+}
