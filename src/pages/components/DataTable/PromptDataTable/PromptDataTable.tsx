@@ -1,10 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import classNames from 'classnames';
+import React, { useEffect, useState } from 'react';
 
 import EditIcon from '@mui/icons-material/Edit';
 
-import { PromptData, RootStateInterface, TableHeader } from '../../../../interfaces';
+import { PromptData, TableHeader } from '../../../../interfaces';
 
 import '../DataTable.scss';
 
@@ -16,21 +14,11 @@ type PromptDataTableProps = {
 };
 
 export const PromptDataTable = ({ rows, headers, totalRows, promptSelectedId }: PromptDataTableProps) => {
-   const theme = useSelector((state: RootStateInterface) => state.theme.theme);
 
    const [currentPage, setCurrentPage] = useState(0);
    const [pageNumber, setPageNumber] = useState(1);
    const [totalPages, setTotalPages] = useState(0);
    const [key, setKey] = useState<string>();
-
-   // Use Memo & Custom Classes
-   const tableClasses = useMemo(
-      () =>
-         classNames('dataTable', {
-            dark: theme === 'dark',
-         }),
-      [theme]
-   );
 
    // Functions
    const handleEdit = (e: React.MouseEvent, Id: string) => {
@@ -102,7 +90,7 @@ export const PromptDataTable = ({ rows, headers, totalRows, promptSelectedId }: 
    }, [totalRows]);
 
    return (
-      <div className={tableClasses}>
+      <div className='dataTable'>
          <div className='tableContainer'>
             <div className='tableWrapper'>
                <table cellSpacing={3}>

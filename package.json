@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-amplify/ui-react": "^4.6.1",
     "@azure/msal-browser": "^2.36.0",
     "@azure/msal-react": "^1.5.6",
     "@emotion/react": "^11.10.5",
@@ -20,7 +21,9 @@
     "@types/react": "^18.0.25",
     "@types/react-data-grid": "^4.0.8",
     "@types/react-dom": "^18.0.8",
+    "aws-amplify": "^5.2.0",
     "axios": "^1.2.1",
+    "classnames": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
