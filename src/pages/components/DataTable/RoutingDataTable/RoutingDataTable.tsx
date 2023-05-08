@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
-=======
-import React, { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
->>>>>>> origin/main
-
 import EditIcon from '@mui/icons-material/Edit';
-
 import { RoutingData, TableHeader } from '../../../../interfaces';
 
 import '../DataTable.scss';
@@ -19,10 +12,6 @@ type RoutingDataTableProps = {
 };
 
 export const RoutingDataTable = ({ rows, headers, totalRows, routingSelectedName }: RoutingDataTableProps) => {
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
    const [currentPage, setCurrentPage] = useState(0);
    const [pageNumber, setPageNumber] = useState(1);
    const [totalPages, setTotalPages] = useState(0);
