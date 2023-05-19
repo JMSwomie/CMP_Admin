@@ -6,10 +6,8 @@ import { Provider } from 'react-redux';
 import { Amplify } from 'aws-amplify';
 import awsExports from './aws-exports';
 
-import { LoginPage } from './pages/auth';
 import { ProtectedRoute } from './protectedRoute/ProtectedRoute';
-import { store } from './store';
-import { barSelect, sideBarMode } from './store/slices';
+import { barSelect, sideBarMode, store } from './store';
 
 import './index.scss';
 
@@ -33,7 +31,6 @@ root.render(
       <Provider store={store}>
          <BrowserRouter>
             <Routes>
-               <Route path='/login' element={<LoginPage />} />
                <Route path='/*' element={<ProtectedRoute />} />
             </Routes>
          </BrowserRouter>

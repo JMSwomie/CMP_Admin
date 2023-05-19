@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import AsyncSelect from 'react-select/async';
 import classNames from 'classnames';
 
 import { LoadingSpinner, RoutingDataTable, RoutingInfoModal } from '../../components';
 import { routingDummyData } from '../../../data';
-import { getUserLogout } from '../../../helpers';
+import { getRouting } from '../../../helpers';
 import { useWindowsSize } from '../../../hooks';
 import { RoutingData, TableHeader } from '../../../interfaces';
-// import { RoutingData, RootStateInterface, TableHeader } from '../../../interfaces';
 import { errorAlert, tableRows } from '../../../services';
-// import { errorAlert, getToken, tableRows } from '../../../services';
-import { barSelect, setLogin } from '../../../store/slices';
+import { barSelect, setLogin } from '../../../store';
 
 import './Routing.scss';
 
@@ -28,6 +26,8 @@ export const Routing = () => {
    const dispatch = useDispatch();
    const navigate = useNavigate();
    const windowSize = useWindowsSize();
+
+   const { accessToken } = useSelector((state: any) => state.user);
 
    const [routingData, setRoutingData] = useState<RoutingData[]>([]);
 
@@ -71,10 +71,6 @@ export const Routing = () => {
          filterData = filterData.filter((row: any) => row.Name.toLowerCase().indexOf(routing.toLocaleLowerCase()) > -1);
       }
 
-      // if (email) {
-      //    filterData = filterData.filter((row: any) => row.email.toLowerCase().indexOf(email.toLocaleLowerCase()) > -1);
-      // }
-
       return filterData;
    }, [routingData, routing, language]);
 
@@ -85,42 +81,44 @@ export const Routing = () => {
    };
 
    const closeSystem = useCallback(async () => {
-      const resp = await getUserLogout();
+      // const resp = await getUserLogout();
 
-      const err: Record<number, string> = {
-         401: 'The user information is invalid, the system is getting logout',
-         422: 'The provide data is wrong',
-         500: 'Server failed',
-      };
+      // const err: Record<number, string> = {
+      //    401: 'The user information is invalid, the system is getting logout',
+      //    422: 'The provide data is wrong',
+      //    500: 'Server failed',
+      // };
 
-      if (!resp) {
-         setErrMsg('No server response');
-      } else {
-         setErrMsg(err[resp.response.status] || `Login Failed error ID: ${resp.response.status}`);
-      }
+      // if (!resp) {
+      //    setErrMsg('No server response');
+      // } else {
+      //    setErrMsg(err[resp.response.status] || `Login Failed error ID: ${resp.response.status}`);
+      // }
 
       setTimeout(() => {
          dispatch(barSelect('Prompt'));
-         dispatch(setLogin(''));
-         navigate('/login');
+         dispatch(setLogin(false));
+         navigate('/');
       }, 1000);
    }, [dispatch, navigate]);
 
    const fetchData = useCallback(async () => {
       setIsLoading(true);
-      // const token: string | null = getToken();
 
-      // if (token) {
-      //    const resp: any = await getDrivers(token);
-      //    setDriversData(resp.data);
-      //    setIsLoading(false);
+      console.log(accessToken);
 
-      //    if (resp.response) {
-      //       if (resp.response.status === 401) {
-      //          closeSystem();
-      //       }
-      //    }
-      // }
+      if (accessToken) {
+         const resp: any = await getRouting(accessToken);
+         console.log(resp);
+         setRoutingData(resp);
+         setIsLoading(false);
+
+         if (resp.response) {
+            if (resp.response.status === 401) {
+               closeSystem();
+            }
+         }
+      }
 
       setRoutingData(routingDummyData);
       setIsLoading(false);
@@ -214,10 +212,7 @@ export const Routing = () => {
                      <h1 className='listRoutingTitle'>Routing Manager</h1>
 
                      <div className='titleRoutingButtons'>
-                        <button
-                           className='btnSubmit'
-                           onClickCapture={clearFilter}
-                           title='Clear'>
+                        <button className='btnSubmit' onClickCapture={clearFilter} title='Clear'>
                            <span className='buttonTitle'>Clear Filters</span>
                         </button>
                         <button

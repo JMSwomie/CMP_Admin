@@ -1,7 +1,5 @@
 // Auth Interfaces
-export * from './auth/changePasswordInterface';
 export * from './auth/loginInterface';
-export * from './auth/mslaInterface';
 
 // Hooks Interfaces
 export * from './hooks/windowSizeInterface';

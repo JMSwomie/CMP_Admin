@@ -1,18 +1,16 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 
-import { useMsal } from '@azure/msal-react';
-
 import { links } from '../../../data/dataTableSource';
-import { barSelect } from '../../../store/slices';
+import { barSelect } from '../../../store';
 
 import './SideBar.scss';
+import { getLogout } from '../../../helpers';
 
 export const SideBar = () => {
    const dispatch = useDispatch();
-   const navigate = useNavigate();
-   const { instance } = useMsal();
+   // const navigate = useNavigate();
 
    const { barShow } = useSelector((state: any) => state.sideBar);
    const { componentSelect } = useSelector((state: any) => state.sideBarSelect);
@@ -29,12 +27,12 @@ export const SideBar = () => {
    };
 
    const closeSys = async () => {
-      instance.logoutRedirect();
+      getLogout()
 
-      setTimeout(() => {
-         dispatch(barSelect('Prompt'));
-         navigate('/login');
-      }, 1000);
+      // setTimeout(() => {
+      //    dispatch(barSelect('Prompt'));
+      //    navigate('/');
+      // }, 1000);
    };
 
    return (

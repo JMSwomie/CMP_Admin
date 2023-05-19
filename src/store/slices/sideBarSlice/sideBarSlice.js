@@ -1,16 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export const sideBarSlice = createSlice({
-  name: 'sideBar',
-  initialState: {
-    barShow: 'show',
-  },
-  reducers: {
-    sideBarMode: (state, action: PayloadAction<string>) => {
-      state.barShow = action.payload;
-    },
-  },
+   name: 'sideBar',
+   initialState: {
+      barShow: 'show',
+   },
+   reducers: {
+      sideBarMode: (state, action: PayloadAction<string>) => {
+         state.barShow = action.payload;
+      },
+   },
 });
 
 // Action creators are generated for each case reducer function

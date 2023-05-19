@@ -1,19 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export const loginSlice = createSlice({
-  name: 'login',
-  initialState: {
-    authStatus: '',
-  },
-  reducers: {
-    setLogin: (state, action: PayloadAction<string>) => {
-      state.authStatus = action.payload;
-    },
-    setLogout: (state, action: PayloadAction<string>) => {
-      state.authStatus = action.payload
-    }
-  },
+   name: 'login',
+   initialState: {
+      authStatus: false,
+   },
+   reducers: {
+      setLogin: (state, action: PayloadAction<boolean>) => {
+         state.authStatus = action.payload;
+      },
+      setLogout: (state, action: PayloadAction<boolean>) => {
+         state.authStatus = action.payload;
+      },
+   },
 });
 
 // Action creators are generated for each case reducer function

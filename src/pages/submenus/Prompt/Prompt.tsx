@@ -6,12 +6,12 @@ import classNames from 'classnames';
 
 import { LoadingSpinner, PromptDataTable, PromptInfoModal } from '../../components';
 import { promptDummyData } from '../../../data';
-import { getUserLogout } from '../../../helpers';
+// import { getUserLogout } from '../../../helpers';
 import { useWindowsSize } from '../../../hooks';
 import { PromptData, TableHeader } from '../../../interfaces';
 import { errorAlert, tableRows } from '../../../services';
 // import { errorAlert, getToken, tableRows } from '../../../services';
-import { barSelect, setLogin } from '../../../store/slices';
+import { barSelect, setLogin } from '../../../store';
 
 import './Prompt.scss';
 
@@ -84,23 +84,23 @@ export const Prompt = () => {
    };
 
    const closeSystem = useCallback(async () => {
-      const resp = await getUserLogout();
+      // const resp = await getUserLogout();
 
-      const err: Record<number, string> = {
-         401: 'The user information is invalid, the system is getting logout',
-         422: 'The provide data is wrong',
-         500: 'Server failed',
-      };
+      // const err: Record<number, string> = {
+      //    401: 'The user information is invalid, the system is getting logout',
+      //    422: 'The provide data is wrong',
+      //    500: 'Server failed',
+      // };
 
-      if (!resp) {
-         setErrMsg('No server response');
-      } else {
-         setErrMsg(err[resp.response.status] || `Login Failed error ID: ${resp.response.status}`);
-      }
+      // if (!resp) {
+      //    setErrMsg('No server response');
+      // } else {
+      //    setErrMsg(err[resp.response.status] || `Login Failed error ID: ${resp.response.status}`);
+      // }
 
       setTimeout(() => {
          dispatch(barSelect('Prompt'));
-         dispatch(setLogin(''));
+         dispatch(setLogin(false));
          navigate('/login');
       }, 1000);
    }, [dispatch, navigate]);

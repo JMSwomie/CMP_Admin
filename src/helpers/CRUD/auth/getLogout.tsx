@@ -1,17 +1,10 @@
-import { LOGOUT_URL, sysApi } from '../../../api';
+import { Auth } from 'aws-amplify';
 
-export const getLogout = async (token: string) => {
-  try {
-    const resp = await sysApi.post(
-      LOGOUT_URL,
-      {},
-      {
-        headers: { authorization: `Bearer ${token}` },
-      },
-    );
-
-    return resp.data;
-  } catch (err) {
-    return err;
-  }
+export const getLogout = async () => {
+   try {
+      const res = await Auth.signOut();
+      return res;
+   } catch (err) {
+      throw new Error(`Fail to logout, ${err}`);
+   }
 };

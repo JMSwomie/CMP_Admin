@@ -1,11 +1,10 @@
-import React from 'react';
-import { useMsal } from '@azure/msal-react';
-import { MainPage } from '../pages/main/MainPage';
+import { useSelector } from 'react-redux';
+
 import { LoginPage } from '../pages/auth';
+import { MainPage } from '../pages/main/MainPage';
 
 export const ProtectedRoute = () => {
-   const { accounts } = useMsal();
-   const isAuthenticated = accounts.length > 0;
+   const { authStatus } = useSelector((state: any) => state.login);
 
-   return isAuthenticated ? <MainPage /> : <LoginPage />;
+   return authStatus ? <MainPage /> : <LoginPage />;
 };

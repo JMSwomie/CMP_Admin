@@ -1,16 +1,28 @@
+// import React from 'react'
+
+
+
+// export const MainPage = () => {
+
+//   return (
+//     <div>MainPage</div>
+//   )
+// }
+
+
+
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 
-import { useMsal } from '@azure/msal-react';
 
 import { Footer, NavBar, SideBar } from '../components';
 import { RootStateInterface } from '../../interfaces';
 import { Prompt, Routing } from '../submenus';
 import { errorAlert } from '../../services';
-import { barSelect, sideBarMode, setLogin } from '../../store/slices';
+import { barSelect, sideBarMode, setLogin } from '../../store';
 
 import './MainPage.scss';
 
@@ -30,7 +42,6 @@ const selectRender = (sideBarSelect: string) => {
 export const MainPage = () => {
    const dispatch = useDispatch();
    const navigate = useNavigate();
-   const { instance } = useMsal();
 
    const { barShow } = useSelector((state: any) => state.sideBar);
    const sideBarSelect = useSelector((state: RootStateInterface) => state.sideBarSelect.componentSelect);
@@ -58,12 +69,10 @@ export const MainPage = () => {
    };
 
    const closeSystem = useCallback(async () => {
-      instance.logoutRedirect();
-
       setTimeout(() => {
          dispatch(barSelect('Prompt'));
-         dispatch(setLogin(''));
-         navigate('/login');
+         dispatch(setLogin(false));
+         navigate('/');
       }, 1000);
    }, [dispatch, navigate]);
 
