@@ -11,8 +11,12 @@ type PromptDataTableProps = {
    promptSelectedId: (Name: string) => void;
 };
 
-export const PromptDataTable = ({ rows, headers, totalRows, promptSelectedId }: PromptDataTableProps) => {
-
+export const PromptDataTable = ({
+   rows,
+   headers,
+   totalRows,
+   promptSelectedId,
+}: PromptDataTableProps) => {
    const [currentPage, setCurrentPage] = useState(0);
    const [pageNumber, setPageNumber] = useState(1);
    const [totalPages, setTotalPages] = useState(0);
@@ -96,28 +100,52 @@ export const PromptDataTable = ({ rows, headers, totalRows, promptSelectedId }: 
                      <tr className='tableHead'>
                         {headers[0] &&
                            headers.map(({ key, label, width }: TableHeader) => {
-                              return <th key={key} style={{ width: width }}>{`${label} `}</th>;
+                              return (
+                                 <th
+                                    key={key}
+                                    style={{ width: width }}>{`${label} `}</th>
+                              );
                            })}
                      </tr>
                   </thead>
                   <tbody>
                      {rows[0] &&
-                        limitRows().map(({ Id, Name, Language, Type }: PromptData) => {
-                           return (
-                              <tr
-                                 key={Id}
-                                 className={`tableRow ${Id === key ? 'active' : ''}`}
-                                 onClick={(e) => toggleActive(e, Id)}>
-                                 <td style={{ textAlign: 'center' }}>{Name}</td>
-                                 <td style={{ textAlign: 'center' }}>{Language}</td>
-                                 <td style={{ textAlign: 'center' }}>Play button</td>
-                                 <td style={{ textAlign: 'center' }}>{Type}</td>
-                                 <td style={{ textAlign: 'center' }}>
-                                    <EditIcon onClick={(e) => handleEdit(e, Id)} />
-                                 </td>
-                              </tr>
-                           );
-                        })}
+                        limitRows().map(
+                           ({ Id, Name, Language, Type }: PromptData) => {
+                              return (
+                                 <tr
+                                    key={`${Id}-${Language}`}
+                                    className={`tableRow ${
+                                       `${Id}-${Language}` === key
+                                          ? 'active'
+                                          : ''
+                                    }`}
+                                    onClick={(e) =>
+                                       toggleActive(e, `${Id}-${Language}`)
+                                    }>
+                                    <td style={{ textAlign: 'center' }}>
+                                       {Name}
+                                    </td>
+                                    <td style={{ textAlign: 'center' }}>
+                                       {Language}
+                                    </td>
+                                    <td style={{ textAlign: 'center' }}>
+                                       Play button
+                                    </td>
+                                    <td style={{ textAlign: 'center' }}>
+                                       {Type}
+                                    </td>
+                                    <td style={{ textAlign: 'center' }}>
+                                       <EditIcon
+                                          onClick={(e) =>
+                                             handleEdit(e, `${Id}-${Language}`)
+                                          }
+                                       />
+                                    </td>
+                                 </tr>
+                              );
+                           }
+                        )}
                   </tbody>
                </table>
             </div>

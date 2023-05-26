@@ -1,37 +1,28 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
 import CancelIcon from '@mui/icons-material/Cancel';
 
-// import { putRouting } from '../../../../../helpers';
-// import { FormErrorInterface } from '../../../../../interfaces';
-// import { errorAlert, getToken } from '../../../../../services';
+import { AudioPlayer } from '../../AudioPlayer/AudioPlayer';
+import { postPrompt } from '../../../../helpers';
 
 import '../Modals.scss';
-import { AudioPlayer } from '../../AudioPlayer/AudioPlayer';
 
-// const ActiveSwitch = styled(Switch)(({ theme }) => ({
-//    '& .MuiSwitch-switchBase.Mui-checked': {
-//      color: '#229936',
-//      '&:hover': {
-//        backgroundColor: alpha('#229936', theme.palette.action.hoverOpacity),
-//      },
-//    },
-//    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-//      backgroundColor: pink[600],
-//    },
-//  }));
-
-export const PromptInfoModal = ({ promptSelected, clearPromptSelected, closeModal, modalReload }: any) => {
+export const PromptInfoModal = ({
+   promptSelected,
+   clearPromptSelected,
+   closeModal,
+   modalReload,
+}: any) => {
    const [readOnly, setReadOnly] = useState<boolean>(true);
    const [hide, setHide] = useState<boolean>(false);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
-   // const [formErr, setFormErr] = useState<
-   //   FormErrorInterface | undefined
-   // >();
+   const { accessToken } = useSelector((state: any) => state.user);
 
    // Routing Data
+   const [id, setId] = useState<string>('');
    const [name, setName] = useState<string>('');
    const [content, setContent] = useState<string>('');
    const [language, setLanguage] = useState<string>('');
@@ -66,67 +57,39 @@ export const PromptInfoModal = ({ promptSelected, clearPromptSelected, closeModa
    };
 
    const handleSubmit = () => {
-      // const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-
-      // if (!name) {
-      //   setFormErr({
-      //     err: 'The full name is required!!',
-      //   });
-      // } else if (!email) {
-      //   setFormErr({
-      //     err: 'The driver email is required!!',
-      //   });
-      // } else if (!EMAIL_REGEX.test(email)) {
-      //   setFormErr({ err: 'This is not a valid Email!!' });
-      // } else if (!phone) {
-      //   setFormErr({
-      //     err: 'The phone number is required!!',
-      //   });
-      // } else {
-      // const token: string | null = getToken();
-
-      // if (token) {
-      //   putRouting(
-      //     token,
-      //     driverSelected.id,
-      //     name,
-      //     email,
-      //     phone,
-      //   );
-      // } else {
-      //   console.log('Error');
-      // }
-
-      // if (resetPass) {
-      //   // TODO: Password Reset Api
-      // }
+      if (accessToken && id && language && content) {
+         postPrompt(accessToken, id, language, content);
+      } else {
+         console.log(
+            `Error: Missing required fields. Data: ${id},  ${language}, ${content}`
+         );
+      }
 
       handledCloseModal();
-      // modalReload(true);
-      // }
+      modalReload(true);
    };
 
    // Use Effects
    useEffect(() => {
       if (typeof promptSelected === 'object' && promptSelected !== null) {
+         setId(promptSelected[0].Id);
          setName(promptSelected[0].Name);
          setContent(promptSelected[0].Content);
          setLanguage(promptSelected[0].Language);
       }
    }, [promptSelected]);
 
-   // useEffect(() => {
-   //   if (formErr) {
-   //     errorAlert('Fail to update routing', formErr.err);
-   //   }
-   // }, [formErr]);
+   console.log(promptSelected);
 
    return (
       <div className={modalClasses}>
          <div className='modalHeader'>
             <h2>Routing Prompt Management</h2>
             <div className='closeModal'>
-               <CancelIcon className='closeModalIcon' onClick={handledCloseModal} />
+               <CancelIcon
+                  className='closeModalIcon'
+                  onClick={handledCloseModal}
+               />
             </div>
          </div>
 
@@ -139,7 +102,9 @@ export const PromptInfoModal = ({ promptSelected, clearPromptSelected, closeModa
                <form onSubmit={handleSubmit}>
                   <div className='formGroup'>
                      <label className='label1FormGroup' htmlFor='formGroup'>
-                        <span>Type the text to be read by the prompt generator:</span>
+                        <span>
+                           Type the text to be read by the prompt generator:
+                        </span>
                         <textarea
                            rows={5}
                            cols={5}
@@ -153,7 +118,11 @@ export const PromptInfoModal = ({ promptSelected, clearPromptSelected, closeModa
 
                   <div className='formGroup2'>
                      <label>Prompt Preview:</label>
-                     <AudioPlayer closeModal={hide} playing={isPlaying} setPlaying={setIsPlaying} />
+                     <AudioPlayer
+                        closeModal={hide}
+                        playing={isPlaying}
+                        setPlaying={setIsPlaying}
+                     />
                   </div>
                </form>
             </div>

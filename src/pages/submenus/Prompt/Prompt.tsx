@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import AsyncSelect from 'react-select/async';
 import classNames from 'classnames';
 
-import { LoadingSpinner, PromptDataTable, PromptInfoModal } from '../../components';
-import { promptDummyData } from '../../../data';
+import {
+   LoadingSpinner,
+   PromptDataTable,
+   PromptInfoModal,
+} from '../../components';
+// import { promptDummyData } from '../../../data';
 // import { getUserLogout } from '../../../helpers';
 import { useWindowsSize } from '../../../hooks';
 import { PromptData, TableHeader } from '../../../interfaces';
@@ -14,6 +18,7 @@ import { errorAlert, tableRows } from '../../../services';
 import { barSelect, setLogin } from '../../../store';
 
 import './Prompt.scss';
+import { getPrompt } from '../../../helpers';
 
 const headers: TableHeader[] = [
    { key: 'Name', label: 'Name', width: 150 },
@@ -27,6 +32,8 @@ export const Prompt = () => {
    const dispatch = useDispatch();
    const navigate = useNavigate();
    const windowSize = useWindowsSize();
+
+   const { accessToken } = useSelector((state: any) => state.user);
 
    const [promptData, setPromptData] = useState<PromptData[]>([]);
 
@@ -62,12 +69,17 @@ export const Prompt = () => {
 
       if (language) {
          filterData = filterData.filter(
-            (row: any) => row.Language.toLowerCase().indexOf(language.toLocaleLowerCase()) > -1
+            (row: any) =>
+               row.Language.toLowerCase().indexOf(language.toLocaleLowerCase()) >
+               -1
          );
       }
 
       if (name) {
-         filterData = filterData.filter((row: any) => row.Name.toLowerCase().indexOf(name.toLocaleLowerCase()) > -1);
+         filterData = filterData.filter(
+            (row: any) =>
+               row.Name.toLowerCase().indexOf(name.toLocaleLowerCase()) > -1
+         );
       }
 
       // if (email) {
@@ -107,26 +119,27 @@ export const Prompt = () => {
 
    const fetchData = useCallback(async () => {
       setIsLoading(true);
-      // const token: string | null = getToken();
 
-      // if (token) {
-      //    const resp: any = await getDrivers(token);
-      //    setDriversData(resp.data);
-      //    setIsLoading(false);
+      if (accessToken) {
+         const resp: any = await getPrompt(accessToken);
+         setPromptData(resp.output);
+         setIsLoading(false);
 
-      //    if (resp.response) {
-      //       if (resp.response.status === 401) {
-      //          closeSystem();
-      //       }
-      //    }
-      // }
+         if (resp.response) {
+            if (resp.response.status === 401) {
+               // closeSystem();
+            }
+         }
+      }
 
-      setPromptData(promptDummyData);
+      // setPromptData(promptDummyData);
       setIsLoading(false);
    }, [closeSystem]);
 
    const handledLanguageOnChange = (selected: any) => {
-      const resp = promptData.find((i: PromptData) => i.Language === selected.label);
+      const resp = promptData.find(
+         (i: PromptData) => i.Language === selected.label
+      );
 
       if (resp) {
          setLanguage(resp.Language);
@@ -142,8 +155,15 @@ export const Prompt = () => {
    };
 
    const handleSelectedPrompt = useCallback(
-      (Id: string) => {
-         const prompt = promptData.filter((item) => item.Id.toLowerCase().indexOf(Id.toLocaleLowerCase()) > -1);
+      (Value: string) => {
+         const [id, language] = Value.split('-');
+
+         const prompt = promptData.filter(
+            (item) =>
+               item.Id.toLowerCase() === id.toLowerCase() &&
+               item.Language.toLowerCase() === language.toLowerCase()
+         );
+         
          setPromptSelected(prompt);
          setPromptModal(false);
       },
@@ -153,8 +173,9 @@ export const Prompt = () => {
    const languageOptions = useCallback(
       (value: any, callback: any) => {
          setTimeout(() => {
-            const filtered: PromptData[] = promptData.filter((promptData: PromptData) =>
-               promptData.Language.toLowerCase().includes(value.toLowerCase())
+            const filtered: PromptData[] = promptData.filter(
+               (promptData: PromptData) =>
+                  promptData.Language.toLowerCase().includes(value.toLowerCase())
             );
 
             callback(filtered.map((i) => ({ label: i.Language })));
@@ -166,8 +187,9 @@ export const Prompt = () => {
    const promptOptions = useCallback(
       (value: any, callback: any) => {
          setTimeout(() => {
-            const filtered: PromptData[] = promptData.filter((promptData: PromptData) =>
-               promptData.Name.toLowerCase().includes(value.toLowerCase())
+            const filtered: PromptData[] = promptData.filter(
+               (promptData: PromptData) =>
+                  promptData.Name.toLowerCase().includes(value.toLowerCase())
             );
 
             callback(filtered.map((i) => ({ label: i.Name })));
@@ -202,6 +224,9 @@ export const Prompt = () => {
       }
    }, [promptSelectedId, errMsg, modalReload, windowSize]);
 
+   console.log(showingData);
+   console.log(promptSelectedId);
+
    return (
       <>
          {isLoading ? (
@@ -213,7 +238,10 @@ export const Prompt = () => {
                      <h1 className='listPromptTitle'>Prompt Manager</h1>
 
                      <div className='titlePromptButtons'>
-                        <button className='btnSubmit' onClickCapture={clearFilter} title='Clear'>
+                        <button
+                           className='btnSubmit'
+                           onClickCapture={clearFilter}
+                           title='Clear'>
                            <span className='buttonTitle'>Clear Filters</span>
                         </button>
                      </div>

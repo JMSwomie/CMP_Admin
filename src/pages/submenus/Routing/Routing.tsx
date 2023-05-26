@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import AsyncSelect from 'react-select/async';
 import classNames from 'classnames';
 
-import { LoadingSpinner, RoutingDataTable, RoutingInfoModal } from '../../components';
-import { routingDummyData } from '../../../data';
+import {
+   LoadingSpinner,
+   RoutingDataTable,
+   RoutingInfoModal,
+} from '../../components';
 import { getRouting } from '../../../helpers';
 import { useWindowsSize } from '../../../hooks';
 import { RoutingData, TableHeader } from '../../../interfaces';
@@ -63,12 +66,17 @@ export const Routing = () => {
 
       if (language) {
          filterData = filterData.filter(
-            (row: any) => row.Language.toLowerCase().indexOf(language.toLocaleLowerCase()) > -1
+            (row: any) =>
+               row.Language.toLowerCase().indexOf(language.toLocaleLowerCase()) >
+               -1
          );
       }
 
       if (routing) {
-         filterData = filterData.filter((row: any) => row.Name.toLowerCase().indexOf(routing.toLocaleLowerCase()) > -1);
+         filterData = filterData.filter(
+            (row: any) =>
+               row.Name.toLowerCase().indexOf(routing.toLocaleLowerCase()) > -1
+         );
       }
 
       return filterData;
@@ -105,27 +113,25 @@ export const Routing = () => {
    const fetchData = useCallback(async () => {
       setIsLoading(true);
 
-      console.log(accessToken);
-
       if (accessToken) {
          const resp: any = await getRouting(accessToken);
-         console.log(resp);
-         setRoutingData(resp);
+         setRoutingData(resp.output);
          setIsLoading(false);
 
          if (resp.response) {
             if (resp.response.status === 401) {
-               closeSystem();
+               // closeSystem();
             }
          }
       }
 
-      setRoutingData(routingDummyData);
       setIsLoading(false);
    }, [closeSystem]);
 
    const handledLanguageOnChange = (selected: any) => {
-      const resp = routingData.find((i: RoutingData) => i.Language === selected.label);
+      const resp = routingData.find(
+         (i: RoutingData) => i.Language === selected.label
+      );
 
       if (resp) {
          setLanguage(resp.Language);
@@ -133,7 +139,9 @@ export const Routing = () => {
    };
 
    const handledRoutingOnChange = (selected: any) => {
-      const resp = routingData.find((i: RoutingData) => i.Name === selected.label);
+      const resp = routingData.find(
+         (i: RoutingData) => i.Name === selected.label
+      );
 
       if (resp) {
          setRouting(resp.Name);
@@ -141,8 +149,15 @@ export const Routing = () => {
    };
 
    const handleSelectedRouting = useCallback(
-      (Name: string) => {
-         const routing = routingData.filter((item) => item.Name.toLowerCase().indexOf(Name.toLocaleLowerCase()) > -1);
+      (Value: string) => {
+         const [name, language] = Value.split('-');
+
+         const routing = routingData.filter(
+            (item) =>
+               item.Name.toLowerCase() === name.toLowerCase() &&
+               item.Language.toLowerCase() === language.toLowerCase()
+         );
+
          setRoutingSelected(routing);
          setRoutingModal(false);
       },
@@ -152,8 +167,11 @@ export const Routing = () => {
    const languageOptions = useCallback(
       (value: any, callback: any) => {
          setTimeout(() => {
-            const filtered: RoutingData[] = routingData.filter((routingData: RoutingData) =>
-               routingData.Language.toLowerCase().includes(value.toLowerCase())
+            const filtered: RoutingData[] = routingData.filter(
+               (routingData: RoutingData) =>
+                  routingData.Language.toLowerCase().includes(
+                     value.toLowerCase()
+                  )
             );
 
             callback(filtered.map((i) => ({ label: i.Language })));
@@ -165,8 +183,9 @@ export const Routing = () => {
    const routingOptions = useCallback(
       (value: any, callback: any) => {
          setTimeout(() => {
-            const filtered: RoutingData[] = routingData.filter((routingData: RoutingData) =>
-               routingData.Name.toLowerCase().includes(value.toLowerCase())
+            const filtered: RoutingData[] = routingData.filter(
+               (routingData: RoutingData) =>
+                  routingData.Name.toLowerCase().includes(value.toLowerCase())
             );
 
             callback(filtered.map((i) => ({ label: i.Name })));
@@ -212,7 +231,10 @@ export const Routing = () => {
                      <h1 className='listRoutingTitle'>Routing Manager</h1>
 
                      <div className='titleRoutingButtons'>
-                        <button className='btnSubmit' onClickCapture={clearFilter} title='Clear'>
+                        <button
+                           className='btnSubmit'
+                           onClickCapture={clearFilter}
+                           title='Clear'>
                            <span className='buttonTitle'>Clear Filters</span>
                         </button>
                         <button

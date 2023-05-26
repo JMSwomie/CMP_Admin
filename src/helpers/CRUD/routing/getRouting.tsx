@@ -4,10 +4,10 @@ import { RoutingInterface } from '../../../interfaces';
 export const getRouting = async (accessToken: string) => {
    try {
       const resp = await sysApi.get<RoutingInterface>(ROUTING_URL, {
-         headers: { Authorization: `${accessToken}` },
+         headers: { Accept: '*/*', Authorization: `${accessToken}` },
       });
 
-      return resp;
+      return resp.data;
    } catch (err: any) {
       return err;
    }

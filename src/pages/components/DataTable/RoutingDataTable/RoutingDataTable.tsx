@@ -11,19 +11,24 @@ type RoutingDataTableProps = {
    routingSelectedName: (Name: string) => void;
 };
 
-export const RoutingDataTable = ({ rows, headers, totalRows, routingSelectedName }: RoutingDataTableProps) => {
+export const RoutingDataTable = ({
+   rows,
+   headers,
+   totalRows,
+   routingSelectedName,
+}: RoutingDataTableProps) => {
    const [currentPage, setCurrentPage] = useState(0);
    const [pageNumber, setPageNumber] = useState(1);
    const [totalPages, setTotalPages] = useState(0);
    const [key, setKey] = useState<string>();
 
    // Functions
-   const handleEdit = (e: React.MouseEvent, Name: string) => {
-      if (Name === key) {
-         routingSelectedName(Name);
+   const handleEdit = (e: React.MouseEvent, Value: string) => {
+      if (Value === key) {
+         routingSelectedName(Value);
       } else {
-         setKey(Name);
-         routingSelectedName(Name);
+         setKey(Value);
+         routingSelectedName(Value);
       }
    };
 
@@ -61,18 +66,18 @@ export const RoutingDataTable = ({ rows, headers, totalRows, routingSelectedName
       }
    };
 
-   const toggleActive = (e: React.MouseEvent, Name: string) => {
+   const toggleActive = (e: React.MouseEvent, Value: string) => {
       switch (e.detail) {
          case 1:
-            if (Name === key) {
-               routingSelectedName(Name);
+            if (Value === key) {
+               routingSelectedName(Value);
             } else {
-               setKey(Name);
+               setKey(Value);
             }
             break;
 
          case 2:
-            routingSelectedName(Name);
+            routingSelectedName(Value);
             break;
       }
    };
@@ -95,34 +100,68 @@ export const RoutingDataTable = ({ rows, headers, totalRows, routingSelectedName
                      <tr className='tableHead'>
                         {headers[0] &&
                            headers.map(({ key, label, width }: TableHeader) => {
-                              return <th key={key} style={{ width: width }}>{`${label} `}</th>;
+                              return (
+                                 <th
+                                    key={key}
+                                    style={{ width: width }}>{`${label} `}</th>
+                              );
                            })}
                      </tr>
                   </thead>
                   <tbody>
                      {rows[0] &&
-                        limitRows().map(({ Name, Description, Language, RolloutFlag }: RoutingData) => {
-                           return (
-                              <tr
-                                 key={Name}
-                                 className={`tableRow ${Name === key ? 'active' : ''}`}
-                                 onClick={(e) => toggleActive(e, Name)}>
-                                 <td style={{ textAlign: 'center' }}>{Name}</td>
-                                 <td style={{ textAlign: 'center' }}>{Description}</td>
-                                 <td style={{ textAlign: 'center' }}>{Language}</td>
-                                 <td style={{ display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
-                                    {RolloutFlag === 'True' ? (
-                                       <span className='active'>Active</span>
-                                    ) : (
-                                       <span className='inactive'>Inactive</span>
-                                    )}
-                                 </td>
-                                 <td style={{ textAlign: 'center' }}>
-                                    <EditIcon onClick={(e) => handleEdit(e, Name)} />
-                                 </td>
-                              </tr>
-                           );
-                        })}
+                        limitRows().map(
+                           ({
+                              Name,
+                              Description,
+                              Language,
+                              RolloutFlag,
+                           }: RoutingData) => {
+                              return (
+                                 <tr
+                                    key={`${Name}-${Language}`}
+                                    className={`tableRow ${
+                                       `${Name}-${Language}` === key
+                                          ? 'active'
+                                          : ''
+                                    }`}
+                                    onClick={(e) =>
+                                       toggleActive(e, `${Name}-${Language}`)
+                                    }>
+                                    <td style={{ textAlign: 'center' }}>
+                                       {Name}
+                                    </td>
+                                    <td style={{ textAlign: 'center' }}>
+                                       {Description}
+                                    </td>
+                                    <td style={{ textAlign: 'center' }}>
+                                       {Language}
+                                    </td>
+                                    <td
+                                       style={{
+                                          display: 'flex',
+                                          textAlign: 'center',
+                                          justifyContent: 'center',
+                                       }}>
+                                       {RolloutFlag === 'true' ? (
+                                          <span className='active'>Active</span>
+                                       ) : (
+                                          <span className='inactive'>
+                                             Inactive
+                                          </span>
+                                       )}
+                                    </td>
+                                    <td style={{ textAlign: 'center' }}>
+                                       <EditIcon
+                                          onClick={(e) =>
+                                             handleEdit(e, `${Name}-${Language}`)
+                                          }
+                                       />
+                                    </td>
+                                 </tr>
+                              );
+                           }
+                        )}
                   </tbody>
                </table>
             </div>

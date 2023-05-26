@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
 import CancelIcon from '@mui/icons-material/Cancel';
 import { FormControlLabel, Switch } from '@mui/material';
 
-// import { putRouting } from '../../../../../helpers';
+import { postRouting } from '../../../../helpers';
 // import { FormErrorInterface } from '../../../../../interfaces';
 // import { errorAlert, getToken } from '../../../../../services';
 
@@ -22,20 +23,24 @@ import '../Modals.scss';
 //    },
 //  }));
 
-
-export const RoutingInfoModal = ({ routingSelected, clearRoutingSelected, closeModal, modalReload }: any) => {
+export const RoutingInfoModal = ({
+   routingSelected,
+   clearRoutingSelected,
+   closeModal,
+   modalReload,
+}: any) => {
    const [readOnly, setReadOnly] = useState<boolean>(true);
    const [hide, setHide] = useState<boolean>(false);
 
-   // const [formErr, setFormErr] = useState<
-   //   FormErrorInterface | undefined
-   // >();
+   const { accessToken } = useSelector((state: any) => state.user);
 
    // Routing Data
    const [name, setName] = useState<string>('');
    const [content, setContent] = useState<string>('');
    const [description, setDescription] = useState<string>('');
-   const [status, setStatus] = useState<boolean>();
+   const [language, setLanguage] = useState<string>('');
+   const [recNum, setRecNum] = useState<number>();
+   const [status, setStatus] = useState<boolean>(false);
 
    // Classes
    const modalClasses = classNames('modalBody', {
@@ -52,7 +57,7 @@ export const RoutingInfoModal = ({ routingSelected, clearRoutingSelected, closeM
       setContent(routingSelected.Content);
       setDescription(routingSelected.Description);
 
-      if (routingSelected.RolloutFlag === 'True') {
+      if (routingSelected.RolloutFlag === 'true') {
          setStatus(true);
       } else {
          setStatus(false);
@@ -72,44 +77,16 @@ export const RoutingInfoModal = ({ routingSelected, clearRoutingSelected, closeM
    };
 
    const handleSubmit = () => {
-      // const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-
-      // if (!name) {
-      //   setFormErr({
-      //     err: 'The full name is required!!',
-      //   });
-      // } else if (!email) {
-      //   setFormErr({
-      //     err: 'The driver email is required!!',
-      //   });
-      // } else if (!EMAIL_REGEX.test(email)) {
-      //   setFormErr({ err: 'This is not a valid Email!!' });
-      // } else if (!phone) {
-      //   setFormErr({
-      //     err: 'The phone number is required!!',
-      //   });
-      // } else {
-      // const token: string | null = getToken();
-
-      // if (token) {
-      //   putRouting(
-      //     token,
-      //     driverSelected.id,
-      //     name,
-      //     email,
-      //     phone,
-      //   );
-      // } else {
-      //   console.log('Error');
-      // }
-
-      // if (resetPass) {
-      //   // TODO: Password Reset Api
-      // }
+      if (accessToken && name && recNum && language) {
+         postRouting(accessToken, name, recNum, language, status);
+      } else {
+         console.log(
+            `Error: Missing required fields. Data: ${name}, ${recNum}, ${language}, ${status}`
+         );
+      }
 
       handledCloseModal();
-      // modalReload(true);
-      // }
+      modalReload(true);
    };
 
    // Use Effects
@@ -118,7 +95,12 @@ export const RoutingInfoModal = ({ routingSelected, clearRoutingSelected, closeM
          setName(routingSelected[0].Name);
          setContent(routingSelected[0].Content);
          setDescription(routingSelected[0].Description);
-         setStatus(routingSelected[0].RolloutFlag);
+         setLanguage(routingSelected[0].Language);
+         setRecNum(routingSelected[0].RecNum);
+
+         if (routingSelected[0].RolloutFlag === 'true') {
+            setStatus(true);
+         }
       }
    }, [routingSelected]);
 
@@ -128,12 +110,17 @@ export const RoutingInfoModal = ({ routingSelected, clearRoutingSelected, closeM
    //   }
    // }, [formErr]);
 
+   // console.log(routingSelected);
+
    return (
       <div className={modalClasses}>
          <div className='modalHeader'>
             <h2>Routing Prompt Management</h2>
             <div className='closeModal'>
-               <CancelIcon className='closeModalIcon' onClick={handledCloseModal} />
+               <CancelIcon
+                  className='closeModalIcon'
+                  onClick={handledCloseModal}
+               />
             </div>
          </div>
 
@@ -146,7 +133,9 @@ export const RoutingInfoModal = ({ routingSelected, clearRoutingSelected, closeM
                <form onSubmit={handleSubmit}>
                   <div className='formGroup'>
                      <label className='label1FormGroup' htmlFor='formGroup'>
-                        <span>Type the text to be read by the prompt generator:</span>
+                        <span>
+                           Type the text to be read by the prompt generator:
+                        </span>
                         <textarea
                            rows={5}
                            cols={5}
