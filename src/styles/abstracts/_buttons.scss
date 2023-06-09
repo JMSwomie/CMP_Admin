@@ -2,7 +2,7 @@
 @use './colors' as *;
 @use './variables' as *;
 
-.btnActivated {
+.btnActivate {
    display: flex;
    align-items: center;
    justify-content: center;
@@ -34,23 +34,13 @@
       transform: scale(1.02);
    }
 
-   // @include media('<phone') {
-   //    width: 36px;
-   //    height: 36px;
-   //    padding: 6px;
-   //    border-radius: 50%;
-
-   //    .buttonIcon {
-   //       margin-right: 0;
-   //    }
-
-   //    .buttonTitle {
-   //       display: none;
-   //    }
-   // }
+   &.inactive {
+      opacity: 0.6;
+      transform: none !important;
+   }
 }
 
-.btnInactivated {
+.btnInactivate {
    display: flex;
    align-items: center;
    justify-content: center;
@@ -82,20 +72,10 @@
       transform: scale(1.02);
    }
 
-   // @include media('<tablet') {
-   //    width: 36px;
-   //    height: 36px;
-   //    padding: 6px;
-   //    border-radius: 50%;
-
-   //    .buttonIcon {
-   //       margin-right: 0;
-   //    }
-
-   //    .buttonTitle {
-   //       display: none;
-   //    }
-   // }
+   &.inactive {
+      opacity: 0.6;
+      transform: none !important;
+   }
 
    @include media('<fold') {
    }
@@ -106,7 +86,8 @@
    height: 0px;
    border-style: solid;
    border-width: 12px 0 12px 21px;
-   border-color: transparent transparent transparent rgba($typography-primary, 0.6);
+   border-color: transparent transparent transparent
+      rgba($typography-primary, 0.6);
    cursor: pointer;
 }
 
@@ -149,9 +130,4 @@
    &:active {
       transform: scale(1.02);
    }
-
-   // @include media('<phone') {
-   //    padding: 6px;
-
-   // }
 }

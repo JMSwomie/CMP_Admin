@@ -8,3 +8,4 @@ export * from './CRUD/routing/postRouting';
 // Prompt
 export * from './CRUD/prompt/getPrompt';
 export * from './CRUD/prompt/postPrompt';
+export * from './CRUD/prompt/postPromptAudio';

@@ -9,7 +9,7 @@ import {
    RoutingDataTable,
    RoutingInfoModal,
 } from '../../components';
-import { getRouting } from '../../../helpers';
+import { getRouting, postRouting } from '../../../helpers';
 import { useWindowsSize } from '../../../hooks';
 import { RoutingData, TableHeader } from '../../../interfaces';
 import { errorAlert, tableRows } from '../../../services';
@@ -33,6 +33,8 @@ export const Routing = () => {
    const { accessToken } = useSelector((state: any) => state.user);
 
    const [routingData, setRoutingData] = useState<RoutingData[]>([]);
+
+   const [bulkButton, setBulkButton] = useState(false);
 
    const [routingModal, setRoutingModal] = useState(true);
    const [routingSelected, setRoutingSelected] = useState<RoutingData[]>();
@@ -83,26 +85,42 @@ export const Routing = () => {
    }, [routingData, routing, language]);
 
    // Anonymous Functions
+   const activateRouting = async () => {
+      setIsLoading(true);
+
+      const promises = showingData.map((item: RoutingData) => {
+         const name = item.Name;
+         const language = item.Language;
+         const recNum = item.RecNum;
+         const content = item.Content;
+         const status = true;
+
+         console.log('Item:', item);
+
+         return postRouting(
+            accessToken,
+            name,
+            recNum,
+            language,
+            content,
+            status
+         );
+      });
+
+      try {
+         await Promise.all(promises);
+         fetchData();
+      } catch (err) {
+         console.error(err);
+      }
+   };
+
    const clearFilter = () => {
       setLanguage('');
       setRouting('');
    };
 
    const closeSystem = useCallback(async () => {
-      // const resp = await getUserLogout();
-
-      // const err: Record<number, string> = {
-      //    401: 'The user information is invalid, the system is getting logout',
-      //    422: 'The provide data is wrong',
-      //    500: 'Server failed',
-      // };
-
-      // if (!resp) {
-      //    setErrMsg('No server response');
-      // } else {
-      //    setErrMsg(err[resp.response.status] || `Login Failed error ID: ${resp.response.status}`);
-      // }
-
       setTimeout(() => {
          dispatch(barSelect('Prompt'));
          dispatch(setLogin(false));
@@ -111,18 +129,12 @@ export const Routing = () => {
    }, [dispatch, navigate]);
 
    const fetchData = useCallback(async () => {
-      setIsLoading(true);
+      if (!isLoading) setIsLoading(true);
 
       if (accessToken) {
          const resp: any = await getRouting(accessToken);
          setRoutingData(resp.output);
          setIsLoading(false);
-
-         if (resp.response) {
-            if (resp.response.status === 401) {
-               // closeSystem();
-            }
-         }
       }
 
       setIsLoading(false);
@@ -164,6 +176,34 @@ export const Routing = () => {
       [routingData]
    );
 
+   const inactiveRouting = async () => {
+      setIsLoading(true);
+
+      const promises = showingData.map((item: RoutingData) => {
+         const name = item.Name;
+         const language = item.Language;
+         const recNum = item.RecNum;
+         const content = item.Content;
+         const status = false;
+
+         return postRouting(
+            accessToken,
+            name,
+            recNum,
+            language,
+            content,
+            status
+         );
+      });
+
+      try {
+         await Promise.all(promises);
+         fetchData();
+      } catch (err) {
+         console.error(err);
+      }
+   };
+
    const languageOptions = useCallback(
       (value: any, callback: any) => {
          setTimeout(() => {
@@ -200,6 +240,14 @@ export const Routing = () => {
    }, [fetchData]);
 
    useEffect(() => {
+      if (showingData.length === routingData.length) {
+         setBulkButton(false);
+      } else {
+         setBulkButton(true);
+      }
+   }, [showingData]);
+
+   useEffect(() => {
       if (routingSelectedName.length > 0) {
          handleSelectedRouting(routingSelectedName);
       }
@@ -210,6 +258,7 @@ export const Routing = () => {
       }
 
       if (modalReload) {
+         setIsLoading(true);
          fetchData();
          setModalReload(false);
       }
@@ -238,15 +287,23 @@ export const Routing = () => {
                            <span className='buttonTitle'>Clear Filters</span>
                         </button>
                         <button
-                           className='btnActivated'
-                           // onClickCapture={() => setNewProductModal(false)}
-                           title='Activated'>
-                           <span className='buttonTitle'>Activated</span>
+                           className={
+                              bulkButton ? 'btnActivate' : 'btnActivate inactive'
+                           }
+                           disabled={!bulkButton}
+                           onClick={activateRouting}
+                           title='Activate'>
+                           <span className='buttonTitle'>Activate</span>
                         </button>
                         <button
-                           className='btnInactivated'
-                           // onClickCapture={() => setNewProductModal(false)}
-                           title='Inactived'>
+                           className={
+                              bulkButton
+                                 ? 'btnInactivate'
+                                 : 'btnInactivate inactive'
+                           }
+                           disabled={!bulkButton}
+                           onClick={inactiveRouting}
+                           title='Inactive'>
                            <span className='buttonTitle'>Inactivated</span>
                         </button>
                      </div>

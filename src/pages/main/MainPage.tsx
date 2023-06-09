@@ -1,22 +1,8 @@
-// import React from 'react'
-
-
-
-// export const MainPage = () => {
-
-//   return (
-//     <div>MainPage</div>
-//   )
-// }
-
-
-
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
-
 
 import { Footer, NavBar, SideBar } from '../components';
 import { RootStateInterface } from '../../interfaces';
@@ -44,10 +30,11 @@ export const MainPage = () => {
    const navigate = useNavigate();
 
    const { barShow } = useSelector((state: any) => state.sideBar);
-   const sideBarSelect = useSelector((state: RootStateInterface) => state.sideBarSelect.componentSelect);
+   const sideBarSelect = useSelector(
+      (state: RootStateInterface) => state.sideBarSelect.componentSelect
+   );
 
    const [errMsg, setErrMsg] = useState('');
-
 
    const mainWrapper = useMemo(
       () =>
@@ -100,7 +87,8 @@ export const MainPage = () => {
       updateInactivity();
       const events = ['click', 'keypress', 'scroll', 'mousemove'];
       events.forEach((e) => window.addEventListener(e, updateInactivity));
-      return () => events.forEach((e) => window.removeEventListener(e, updateInactivity));
+      return () =>
+         events.forEach((e) => window.removeEventListener(e, updateInactivity));
    }, [updateInactivity]);
 
    useEffect(() => {
@@ -120,8 +108,16 @@ export const MainPage = () => {
             <div className='sideContainer'>
                <SideBar />
             </div>
-            <div className='sidebarControl' onClick={() => changeBarMode(`${barShow === 'show' ? 'hide' : 'show'}`)}>
-               {barShow === 'show' ? <ArrowBackIosNew className='icon' /> : <ArrowForwardIos className='icon' />}
+            <div
+               className='sidebarControl'
+               onClick={() =>
+                  changeBarMode(`${barShow === 'show' ? 'hide' : 'show'}`)
+               }>
+               {barShow === 'show' ? (
+                  <ArrowBackIosNew className='icon' />
+               ) : (
+                  <ArrowForwardIos className='icon' />
+               )}
             </div>
 
             <div className='mainContainer'>

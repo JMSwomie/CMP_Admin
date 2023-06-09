@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import EditIcon from '@mui/icons-material/Edit';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import PauseIcon from '@mui/icons-material/Pause';
+
+import { postPromptAudio } from '../../../../helpers';
 import { PromptData, TableHeader } from '../../../../interfaces';
 
 import '../DataTable.scss';
@@ -17,10 +23,17 @@ export const PromptDataTable = ({
    totalRows,
    promptSelectedId,
 }: PromptDataTableProps) => {
+   const { accessToken } = useSelector((state: any) => state.user);
+
    const [currentPage, setCurrentPage] = useState(0);
    const [pageNumber, setPageNumber] = useState(1);
    const [totalPages, setTotalPages] = useState(0);
    const [key, setKey] = useState<string>();
+
+   const [audioFile, setAudioFile] = useState<string | undefined>();
+   const [dataId, setDataId] = useState<number | undefined>();
+   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+   const [rowPlaying, setRowPlaying] = useState<string | undefined>();
 
    // Functions
    const handleEdit = (e: React.MouseEvent, Id: string) => {
@@ -43,6 +56,33 @@ export const PromptDataTable = ({
       }
    };
 
+   const playPrompt = async (RecNum: number, key: string | undefined) => {
+      const voice = 'Joanna';
+
+      const data: PromptData | undefined = rows.find(
+         (row) => row.RecNum === RecNum
+      );
+
+      if (audioFile && rowPlaying && dataId) {
+         stopPlayPrompt(dataId);
+      }
+
+      if (data) {
+         const prompt = data.Content;
+
+         try {
+            const blob = await postPromptAudio(accessToken, prompt, voice);
+            const audioUrl = URL.createObjectURL(blob);
+
+            setAudioFile(audioUrl);
+            setRowPlaying(key);
+            setDataId(RecNum);
+         } catch (error) {
+            console.log(error);
+         }
+      }
+   };
+
    const prevPage = () => {
       if (currentPage > 0) {
          setCurrentPage(currentPage - totalRows);
@@ -50,6 +90,19 @@ export const PromptDataTable = ({
       } else if (currentPage === 0) {
          setPageNumber(1);
       }
+   };
+
+   const stopPlayPrompt = (RecNum: number) => {
+      const audioPlayer = document.getElementById(
+         `${RecNum}-audio`
+      ) as HTMLAudioElement;
+
+      audioPlayer.pause();
+      audioPlayer.currentTime = 0;
+      setAudioFile(undefined);
+      setDataId(undefined);
+      setIsPlaying(false);
+      setRowPlaying(undefined);
    };
 
    const totalPage = () => {
@@ -69,20 +122,35 @@ export const PromptDataTable = ({
    const toggleActive = (e: React.MouseEvent, Id: string) => {
       switch (e.detail) {
          case 1:
-            if (Id === key) {
-               promptSelectedId(Id);
-            } else {
-               setKey(Id);
-            }
-            break;
-
-         case 2:
-            promptSelectedId(Id);
-            break;
+            setKey(Id);
       }
    };
 
    // Use Effects
+   useEffect(() => {
+      if (audioFile && rowPlaying) {
+         const audioPlayer = document.getElementById(
+            `${dataId}-audio`
+         ) as HTMLAudioElement;
+
+         audioPlayer.src = audioFile;
+
+         // Play the audio
+         audioPlayer.play();
+         setIsPlaying(true);
+
+         // Stop the audio
+         audioPlayer.addEventListener('ended', () => {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            setAudioFile(undefined);
+            setDataId(undefined);
+            setIsPlaying(false);
+            setRowPlaying(undefined);
+         });
+      }
+   }, [audioFile, rowPlaying]);
+
    useEffect(() => {
       totalPage();
    }, [rows]);
@@ -111,7 +179,13 @@ export const PromptDataTable = ({
                   <tbody>
                      {rows[0] &&
                         limitRows().map(
-                           ({ Id, Name, Language, Type }: PromptData) => {
+                           ({
+                              Id,
+                              Name,
+                              Language,
+                              Type,
+                              RecNum,
+                           }: PromptData) => {
                               return (
                                  <tr
                                     key={`${Id}-${Language}`}
@@ -130,13 +204,33 @@ export const PromptDataTable = ({
                                        {Language}
                                     </td>
                                     <td style={{ textAlign: 'center' }}>
-                                       Play button
+                                       <audio id={`${RecNum}-audio`}></audio>
+                                       {isPlaying &&
+                                       `${Id}-${Language}` === rowPlaying ? (
+                                          <PauseIcon
+                                             className='icon'
+                                             onClick={() =>
+                                                stopPlayPrompt(RecNum)
+                                             }
+                                          />
+                                       ) : (
+                                          <PlayCircleIcon
+                                             className='icon'
+                                             onClick={() =>
+                                                playPrompt(
+                                                   RecNum,
+                                                   `${Id}-${Language}`
+                                                )
+                                             }
+                                          />
+                                       )}
                                     </td>
                                     <td style={{ textAlign: 'center' }}>
                                        {Type}
                                     </td>
                                     <td style={{ textAlign: 'center' }}>
                                        <EditIcon
+                                          className='icon'
                                           onClick={(e) =>
                                              handleEdit(e, `${Id}-${Language}`)
                                           }

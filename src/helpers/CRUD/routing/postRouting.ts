@@ -6,12 +6,14 @@ export const postRouting = async (
    Name: string,
    RecNum: number,
    Language: string,
+   Content: string,
    RolloutFlag: boolean
 ): Promise<RoutingInterface> => {
    const Params = {
       Name,
       RecNum,
       Language,
+      Content,
       RolloutFlag,
    };
 
@@ -20,11 +22,12 @@ export const postRouting = async (
          Accept: '*/*',
          Authorization: `${accessToken}`,
       },
+      params: Params,
    };
 
    try {
-      const resp = await sysApi.put<RoutingInterface>(
-         ROUTING_POST_URL, Params, Config
+      const resp = await sysApi.post<RoutingInterface>(
+         ROUTING_POST_URL, {}, Config
       );
 
       return resp.data;

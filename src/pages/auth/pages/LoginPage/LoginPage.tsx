@@ -26,8 +26,8 @@ export const LoginPage = () => {
             setKey(user.keyPrefix);
             setCognitoUser(user.username);
          }
-      } catch {
-         throw new Error('User data not found');
+      } catch (error) {
+         if (error !== 'The user is not authenticated') console.error(error);
       }
    };
 
@@ -61,11 +61,17 @@ export const LoginPage = () => {
             <div className='loginForm'>
                <h3>Welcome!</h3>
 
-               <p>Please, proceed to login with your Business Microsoft credentials.</p>
+               <p>
+                  Please, proceed to login with your Business Microsoft
+                  credentials.
+               </p>
 
                <div className='login' onClick={handleSignIn}>
                   <div className='windowsLogo'>
-                     <img src={require('../../../../img/WindowsLogo.png')} alt='windows logo' />
+                     <img
+                        src={require('../../../../img/WindowsLogo.png')}
+                        alt='windows logo'
+                     />
                   </div>
 
                   <h4>Continue with Microsoft</h4>

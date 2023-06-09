@@ -6,22 +6,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { FormControlLabel, Switch } from '@mui/material';
 
 import { postRouting } from '../../../../helpers';
-// import { FormErrorInterface } from '../../../../../interfaces';
-// import { errorAlert, getToken } from '../../../../../services';
 
 import '../Modals.scss';
-
-// const ActiveSwitch = styled(Switch)(({ theme }) => ({
-//    '& .MuiSwitch-switchBase.Mui-checked': {
-//      color: '#229936',
-//      '&:hover': {
-//        backgroundColor: alpha('#229936', theme.palette.action.hoverOpacity),
-//      },
-//    },
-//    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-//      backgroundColor: pink[600],
-//    },
-//  }));
 
 export const RoutingInfoModal = ({
    routingSelected,
@@ -76,17 +62,21 @@ export const RoutingInfoModal = ({
       }, 2000);
    };
 
-   const handleSubmit = () => {
+   const handleSubmit = async () => {
       if (accessToken && name && recNum && language) {
-         postRouting(accessToken, name, recNum, language, status);
+         try {
+            await postRouting(accessToken, name, recNum, language, content, status);
+         } catch (err) {
+            console.log(err);
+         }
       } else {
          console.log(
             `Error: Missing required fields. Data: ${name}, ${recNum}, ${language}, ${status}`
          );
       }
 
-      handledCloseModal();
       modalReload(true);
+      handledCloseModal();
    };
 
    // Use Effects
@@ -103,14 +93,6 @@ export const RoutingInfoModal = ({
          }
       }
    }, [routingSelected]);
-
-   // useEffect(() => {
-   //   if (formErr) {
-   //     errorAlert('Fail to update routing', formErr.err);
-   //   }
-   // }, [formErr]);
-
-   // console.log(routingSelected);
 
    return (
       <div className={modalClasses}>

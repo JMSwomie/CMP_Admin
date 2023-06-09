@@ -1,7 +1,6 @@
 // General
 export * from './AudioPlayer/AudioPlayer';
 export * from './Footer/Footer';
-export * from './HasRole/HasRole';
 export * from './LoadingSpinner/LoadingSpinner';
 export * from './NavBar/NavBar';
 export * from './SideBar/SideBar';

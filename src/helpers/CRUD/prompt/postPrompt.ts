@@ -18,11 +18,12 @@ export const postPrompt = async (
          Accept: '*/*',
          Authorization: `${accessToken}`,
       },
+      params: Params,
    };
 
    try {
-      const resp = await sysApi.put<RoutingInterface>(
-         PROMPT_POST_URL, Params, Config
+      const resp = await sysApi.post<RoutingInterface>(
+         PROMPT_POST_URL, {}, Config
       );
 
       return resp.data;

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { AudioPlayer } from '../../AudioPlayer/AudioPlayer';
-import { postPrompt } from '../../../../helpers';
+import { postPrompt, postPromptAudio } from '../../../../helpers';
 
 import '../Modals.scss';
 
@@ -26,6 +26,8 @@ export const PromptInfoModal = ({
    const [name, setName] = useState<string>('');
    const [content, setContent] = useState<string>('');
    const [language, setLanguage] = useState<string>('');
+
+   const [audioFile, setAudioFile] = useState<string>('');
 
    // Classes
    const modalClasses = classNames('modalBody', {
@@ -56,9 +58,13 @@ export const PromptInfoModal = ({
       }, 2000);
    };
 
-   const handleSubmit = () => {
+   const handleSubmit = async () => {
       if (accessToken && id && language && content) {
-         postPrompt(accessToken, id, language, content);
+         try {
+            await postPrompt(accessToken, id, language, content);
+         } catch (err) {
+            console.log(err);
+         }
       } else {
          console.log(
             `Error: Missing required fields. Data: ${id},  ${language}, ${content}`
@@ -69,7 +75,28 @@ export const PromptInfoModal = ({
       modalReload(true);
    };
 
+   const playPromptModal = async () => {
+      const voice = 'Joanna';
+
+      try {
+         const blob = await postPromptAudio(accessToken, content, voice);
+
+         if (blob) {
+            const audioUrl = URL.createObjectURL(blob);
+            setAudioFile(audioUrl);
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
    // Use Effects
+   useEffect(() => {
+      if (content) {
+         playPromptModal();
+      }
+   }, [content]);
+
    useEffect(() => {
       if (typeof promptSelected === 'object' && promptSelected !== null) {
          setId(promptSelected[0].Id);
@@ -78,8 +105,6 @@ export const PromptInfoModal = ({
          setLanguage(promptSelected[0].Language);
       }
    }, [promptSelected]);
-
-   console.log(promptSelected);
 
    return (
       <div className={modalClasses}>
@@ -119,6 +144,7 @@ export const PromptInfoModal = ({
                   <div className='formGroup2'>
                      <label>Prompt Preview:</label>
                      <AudioPlayer
+                        audioFile={audioFile}
                         closeModal={hide}
                         playing={isPlaying}
                         setPlaying={setIsPlaying}

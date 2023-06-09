@@ -69,15 +69,6 @@ export const RoutingDataTable = ({
    const toggleActive = (e: React.MouseEvent, Value: string) => {
       switch (e.detail) {
          case 1:
-            if (Value === key) {
-               routingSelectedName(Value);
-            } else {
-               setKey(Value);
-            }
-            break;
-
-         case 2:
-            routingSelectedName(Value);
             break;
       }
    };
