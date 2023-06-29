@@ -13,13 +13,13 @@ import './index.scss';
 const awsExports = {
    Auth: {
       region: 'us-west-2',
-      userPoolId: 'us-west-2_tnF21pSSA',
-      userPoolWebClientId: '6e86t9qc9i2kp48hanna2bfgi8',
+      userPoolId: 'us-west-2_1RL0GZu5g',
+      userPoolWebClientId: '18qv743as8dkemngjhion5diau',
       oauth: {
-         domain: 'sync-dev.auth.us-west-2.amazoncognito.com',
+         domain: 'dolcrdmgmtportal.auth.us-west-2.amazoncognito.com',
          scope: ['email', 'openid'],
-         redirectSignIn: 'http://localhost:3000/',
-         redirectSignOut: 'http://localhost:3000/',
+         redirectSignIn: 'https://master.d1ef8mp99yrbex.amplifyapp.com/',
+         redirectSignOut: 'https://master.d1ef8mp99yrbex.amplifyapp.com/',
          responseType: 'code',
       },
    },
